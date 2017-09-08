@@ -9,41 +9,41 @@ var connection = mysql.createConnection({
   database: 'bamazonDB'
 });
 
-connection.connect(function(err) {
-  if (err) throw err;
+connection.connect(function(error) {
+  if (error) throw error;
   console.log('\nConnection Successful!\n');
-  makeTable();
+  displayTable();
 });
 
-var makeTable = function() {
-  connection.query('SELECT * FROM products', (err, res) => {
-    for (var i = 0; i < res.length; i++) {
+var displayTable = function() {
+  connection.query('SELECT * FROM products', function(error, response) {
+    for (var i = 0; i < response.length; i++) {
       console.log(
-        res[i].item_id + " | " +
-        res[i].product_name + " | " +
-        res[i].department_name + " | " +
-        res[i].price + " | " + 
-        res[i].stock_quantity + "\n");
+        response[i].item_id + " | " +
+        response[i].product_name + " | " +
+        response[i].department_name + " | " +
+        response[i].price + " | " + 
+        response[i].stock_quantity + "\n");
     }
-    promptCustomer(res);
+    promptCustomer(response);
   })
 }
 
-var promptCustomer = function(res) {
+var promptCustomer = function(response) {
   inquirer.prompt([{
-    type: 'input',
     name: 'choice',
-    message: 'What would you like to purchase?'
+    type: 'input',
+    message: 'What would you like to purchase? (Product Name)'
   }]).then(function(answer) {
     var correct = false;
-    for (var i = 0; i < res.length; i++) {
-      if (res[i].product_name === answer.choice) {
+    for (var i = 0; i < response.length; i++) {
+      if (response[i].product_name === answer.choice) {
         correct = true;
         var product = answer.choice;
         var id = i;
         inquirer.prompt({
-          type: 'input',
           name: 'quantity',
+          type: 'input',
           message: 'How many would you like to buy?',
           validate: function(value) {
             if (isNaN(value) === false) {
@@ -53,21 +53,21 @@ var promptCustomer = function(res) {
             }
           }
         }).then(function(answer) {
-          if ((res[id].stock_quantity - answer.quantity) > 0) {
-            connection.query("UPDATE products SET stock_quantity='" + (res[id].stock_quantity - answer.quantity) + "' WHERE product_name='" + product + "'", (err, res2) => {
+          if ((response[id].stock_quantity - answer.quantity) > 0) {
+            connection.query("UPDATE products SET stock_quantity='" + (response[id].stock_quantity - answer.quantity) + "' WHERE product_name='" + product + "'", function(error, response2) {
               console.log('\nProduct Purchased!\n');
-              makeTable();
+              displayTable();
             })
           } else {
-            console.log('Not a valid selection!');
-            promptCustomer(res);
+            console.log('Not valid input');
+            promptCustomer(response);
           }
         })
       }
     }
-    if (i === res.length && correct === false) {
-      console.log('Not a valid selection!');
-      promptCustomer(res);
+    if (i === response.length && correct === false) {
+      console.log('Not valid input');
+      promptCustomer(response);
     }
   })
-}
+};
