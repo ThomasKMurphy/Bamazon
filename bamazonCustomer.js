@@ -44,7 +44,7 @@ var promptCustomer = function(response) {
         inquirer.prompt({
           name: 'quantity',
           type: 'input',
-          message: 'How many would you like to buy?',
+          message: 'How many would you like to purchase?',
           validate: function(value) {
             if (isNaN(value) === false) {
               return true;
@@ -54,19 +54,22 @@ var promptCustomer = function(response) {
           }
         }).then(function(answer) {
           if ((response[id].stock_quantity - answer.quantity) > 0) {
-            connection.query("UPDATE products SET stock_quantity='" + (response[id].stock_quantity - answer.quantity) + "' WHERE product_name='" + product + "'", function(error, response2) {
-              console.log('\nProduct Purchased!\n');
+            connection.query("UPDATE products SET stock_quantity='" + 
+              (response[id].stock_quantity - answer.quantity) + 
+              "' WHERE product_name='" + product + "'", function(error, response2) {
+              console.log('\nProduct Purchased!');
+              console.log("Total: $" + response[id].price * answer.quantity + "\n");
               displayTable();
             })
           } else {
-            console.log('\nNot valid input\n');
+            console.log('\nSorry, insufficient stock quantity.\n');
             promptCustomer(response);
           }
         })
       }
     }
     if (i === response.length && correct === false) {
-      console.log('\nNot valid input\n');
+      console.log('\nTry the real Amazon.\n');
       promptCustomer(response);
     }
   })
