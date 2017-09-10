@@ -2,8 +2,6 @@
 
 Bamazon application with Node & MySQL
 
-##Description
-
 Make purchases from Bamazon and see inventory change through the command line.
 
 - run "npm install"
