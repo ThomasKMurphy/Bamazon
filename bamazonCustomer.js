@@ -21,8 +21,8 @@ var displayTable = function() {
       console.log(
         response[i].item_id + " | " +
         response[i].product_name + " | " +
-        response[i].department_name + " | " +
-        response[i].price + " | " + 
+        response[i].department_name + " | " + '$' +
+        response[i].price + " | " + 'Quantity: ' +
         response[i].stock_quantity + "\n");
     }
     promptCustomer(response);
@@ -59,14 +59,14 @@ var promptCustomer = function(response) {
               displayTable();
             })
           } else {
-            console.log('Not valid input');
+            console.log('\nNot valid input\n');
             promptCustomer(response);
           }
         })
       }
     }
     if (i === response.length && correct === false) {
-      console.log('Not valid input');
+      console.log('\nNot valid input\n');
       promptCustomer(response);
     }
   })
