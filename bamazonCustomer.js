@@ -33,7 +33,7 @@ var promptCustomer = function(response) {
   inquirer.prompt([{
     name: 'choice',
     type: 'input',
-    message: 'What would you like to purchase? (Product Name)'
+    message: 'What would you like to purchase? Enter product name.'
   }]).then(function(answer) {
     var correct = false;
     for (var i = 0; i < response.length; i++) {
